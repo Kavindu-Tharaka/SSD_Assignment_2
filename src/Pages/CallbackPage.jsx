@@ -1,11 +1,11 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import Image_Card from './Image_Card';
 
 function CallbackPage(props) {
 
     let myArr1;
     let myArr2;
+    let img = [];
 
     const [code, setCode] = useState();
     const [albums, setAlbums] = useState([]);
@@ -27,10 +27,9 @@ function CallbackPage(props) {
 
         const response = await axios.get(url);
 
-        console.log(response.data.albums.data);
+        // console.log(response.data.albums.data);
 
         let arr = response.data.albums.data
-        let img = [];
         /* reading inner arrays using foreach loop */
         arr.forEach(element => {
             if (element.photos.data.length !== 1) {
@@ -46,18 +45,14 @@ function CallbackPage(props) {
             setAlbums(img)
         });
 
-        // console.log(img);
+        console.log(img);
 
     }, [albums])
 
 
     return (
-        <div>
-
-            {albums.map(function (element) {
-                return <Image_Card key={element.id} image={element.image} />
-            })}
-            
+        <div>            
+            Images Will Be Here...
         </div>
     )
 }
