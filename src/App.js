@@ -5,6 +5,7 @@ import "./App.css";
 import SigninPage from './Pages/SigninPage'
 import CallbackPage from './Pages/CallbackPage'
 import PageNotFoundPage from './Pages/PageNotFoundPage'
+import DriveUploadPage from "./Pages/DriveUploadPage";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/" exact component={SigninPage} />
         <Route path="/facebookapp/callback" exact component={CallbackPage} />
         <Route path="*" exact component={PageNotFoundPage} />
+        <Route path="/driveapp/uploadpage" exact component={DriveUploadPage} />
       </Switch>
     </BrowserRouter>
 
