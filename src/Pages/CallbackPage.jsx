@@ -27,7 +27,7 @@ function CallbackPage(props) {
 
         const response = await axios.get(url);
 
-        // console.log(response.data.albums.data);
+        // console.log(response);
 
         let arr = response.data.albums.data
         /* reading inner arrays using foreach loop */
@@ -47,7 +47,7 @@ function CallbackPage(props) {
 
         console.log(img);
 
-    }, [albums])
+    }, [])
 
 
     return (
