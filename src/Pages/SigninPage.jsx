@@ -5,7 +5,7 @@ function SigninPage() {
 
     var clientId ="292393918085-j29elmvnrmuomuep37j5umufmegilqnp.apps.googleusercontent.com" 
 
-    var redirect_uri="https://www.google.lk"
+    var redirect_uri="http://localhost:3000/uploadfiles"
 
     var scope="https://www.googleapis.com/auth/drive"
 
