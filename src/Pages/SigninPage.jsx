@@ -19,7 +19,6 @@ function SigninPage() {
 
     const handleGoogleAuth = () => {
         window.location.href = url;
-        console.log("FN called")
     }
 
     return (
@@ -34,7 +33,6 @@ function SigninPage() {
 
             <br/>
 
-            {/*google auth*/}
             <button
                 type="button"
                 className="btn btn-danger btn-lg mt-2"
