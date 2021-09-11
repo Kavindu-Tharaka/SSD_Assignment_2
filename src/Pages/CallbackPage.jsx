@@ -1,9 +1,11 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import Navbar from '../Components/Navbar';
+import logo from '../Images/logo.png';
 
 function CallbackPage(props) {
 	const [albums, setAlbums] = useState([]);
+	const [profilePictureUrl, setProfilePictureUrl] = useState('');
+	const [userName, setUserName] = useState('');
 	const images = [];
 
 	useEffect(() => {
@@ -19,9 +21,16 @@ function CallbackPage(props) {
 			`https://graph.facebook.com/v11.0/oauth/access_token?client_id=579207406764914&redirect_uri=http://localhost:3000/facebookapp/callback&client_secret=7713750fdf1076a02df161d4ec8444d9&code=${code}`
 		);
 
-		let url = `https://graph.facebook.com/me?fields=albums{photos{images,id}}&access_token=${initResponse.data.access_token}`;
+		let url = `https://graph.facebook.com/me?fields=id,name,picture.width(100).height(100).as(picture_small),albums{photos{images,id}}&access_token=${initResponse.data.access_token}`;
 
 		const response = await axios.get(url);
+
+		console.log(response);
+		console.log(response.data.name);
+		console.log(response.data.picture_small.data.url);
+
+		setUserName(response.data.name);
+		setProfilePictureUrl(response.data.picture_small.data.url);
 
 		extractImages(response);
 	};
@@ -30,7 +39,6 @@ function CallbackPage(props) {
 		/* reading inner arrays using foreach loop */
 		response.data.albums.data.forEach((element) => {
 			if (element.photos.data.length !== 1) {
-				console.log(`Array Size is ${element.photos.data.length}`);
 				element.photos.data.forEach((inElement) => {
 					images.push({
 						id: inElement.id,
@@ -44,7 +52,34 @@ function CallbackPage(props) {
 
 	return (
 		<div>
-			<Navbar />
+			<nav className='navbar navbar-light bg-light'>
+				<div className='container-fluid'>
+					<div>
+						<a className='navbar-brand' href='/'>
+							<img
+								src={logo}
+								alt='FB Manager'
+								width='30'
+								height='30'
+								className='d-inline-block align-text-top'
+							/>
+							<div className='pr-2 d-inline-block align-text-middle'>
+								<h5>Profile Manager</h5>
+							</div>
+						</a>
+					</div>
+					<div>
+						<img
+							src={profilePictureUrl}
+							alt='profile'
+							className='d-inline-block img-profile-pic'
+						/>
+						<h5 className='d-inline-block m-0'>{userName}</h5>
+					</div>
+				</div>
+			</nav>
+
+			<br />
 			{albums.map((image) => (
 				<img
 					src={image.url}
