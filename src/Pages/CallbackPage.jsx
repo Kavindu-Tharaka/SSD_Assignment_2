@@ -1,60 +1,61 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 
 function CallbackPage(props) {
+	const [albums, setAlbums] = useState([]);
+	const images = [];
 
-    let myArr1;
-    let myArr2;
-    let img = [];
+	useEffect(() => {
+		handleResponse();
+	}, []);
 
-    const [code, setCode] = useState();
-    const [albums, setAlbums] = useState([]);
+	const handleResponse = async () => {
+		const code = props.location.search
+			.split('?code=')[1]
+			.split('&state=')[0];
 
-    useEffect(async () => {
-        myArr1 = props.location.search.split("?code=");
+		const initResponse = await axios.get(
+			`https://graph.facebook.com/v11.0/oauth/access_token?client_id=579207406764914&redirect_uri=http://localhost:3000/facebookapp/callback&client_secret=7713750fdf1076a02df161d4ec8444d9&code=${code}`
+		);
 
-        myArr2 = myArr1[1].split("&state=");
+		let url = `https://graph.facebook.com/me?fields=albums{photos{images,id}}&access_token=${initResponse.data.access_token}`;
 
-        // console.log(myArr2[0]);
-        setCode(myArr2[0]);
+		const response = await axios.get(url);
 
-        const res1 = await axios.get(`https://graph.facebook.com/v11.0/oauth/access_token?client_id=579207406764914&redirect_uri=http://localhost:3000/facebookapp/callback&client_secret=7713750fdf1076a02df161d4ec8444d9&code=${myArr2[0]}`);
+		extractImages(response);
+	};
 
-        // console.log(res1.data.access_token);
-        setCode(res1.data.access_token);
+	const extractImages = (response) => {
+		/* reading inner arrays using foreach loop */
+		response.data.albums.data.forEach((element) => {
+			if (element.photos.data.length !== 1) {
+				console.log(`Array Size is ${element.photos.data.length}`);
+				element.photos.data.forEach((inElement) => {
+					images.push({
+						id: inElement.id,
+						url: inElement.images[0].source,
+					});
+					console.log(`Added image: ${inElement.images[0].source}`);
+				});
+				setAlbums([...images]);
+			}
+		});
+		console.log(albums);
+	};
 
-        let url = 'https://graph.facebook.com/me?fields=albums{photos{images,id}}&access_token=' + res1.data.access_token;
-
-        const response = await axios.get(url);
-
-        // console.log(response);
-
-        let arr = response.data.albums.data
-        /* reading inner arrays using foreach loop */
-        arr.forEach(element => {
-            if (element.photos.data.length !== 1) {
-                let innerArray = element.photos.data
-                innerArray.forEach(inElement => {
-                    let temp = {
-                        id: inElement.id,
-                        image: inElement.images[0].source
-                    };
-                    img.push(temp); /* push images to album array */
-                });
-            }
-            setAlbums(img)
-        });
-
-        console.log(img);
-
-    }, [])
-
-
-    return (
-        <div>            
-            Images Will Be Here...
-        </div>
-    )
+	return (
+		<div>
+			<h6>{albums.length}</h6>
+			{albums.map((image) => (
+				<img
+					src={image.url}
+					key={image.id}
+					alt={image.id}
+					width='250'
+				/>
+			))}
+		</div>
+	);
 }
 
-export default CallbackPage
+export default CallbackPage;
