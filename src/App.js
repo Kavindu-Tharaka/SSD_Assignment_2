@@ -15,8 +15,8 @@ function App() {
       <Switch>
         <Route path="/" exact component={SigninPage} />
         <Route path="/facebookapp/callback" exact component={CallbackPage} />
+        <Route path="/driveapp/uploadpage"  component={DriveUploadPage} />
         <Route path="*" exact component={PageNotFoundPage} />
-        <Route path="/driveapp/uploadpage" exact component={DriveUploadPage} />
       </Switch>
     </BrowserRouter>
 
