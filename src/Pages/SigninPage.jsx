@@ -1,4 +1,5 @@
 import React from 'react'
+import Navbar from '../Components/Navbar';
 
 
 function SigninPage() {
@@ -23,6 +24,10 @@ function SigninPage() {
 
     return (
         <div>
+            <Navbar/>
+
+            
+
             <button
                 onClick={handleClick}
                 className="btn btn-primary btn-lg mt-5"

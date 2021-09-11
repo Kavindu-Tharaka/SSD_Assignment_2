@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import Navbar from '../Components/Navbar';
 
 function CallbackPage(props) {
 	const [albums, setAlbums] = useState([]);
@@ -35,17 +36,15 @@ function CallbackPage(props) {
 						id: inElement.id,
 						url: inElement.images[0].source,
 					});
-					console.log(`Added image: ${inElement.images[0].source}`);
 				});
 				setAlbums([...images]);
 			}
 		});
-		console.log(albums);
 	};
 
 	return (
 		<div>
-			<h6>{albums.length}</h6>
+			<Navbar />
 			{albums.map((image) => (
 				<img
 					src={image.url}

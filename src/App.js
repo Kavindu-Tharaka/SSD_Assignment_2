@@ -1,4 +1,3 @@
-import axios from "axios";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import "./App.css";
 
