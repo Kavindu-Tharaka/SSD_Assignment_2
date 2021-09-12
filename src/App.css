@@ -1,6 +1,11 @@
 h5 {
 	margin: 0;
 }
+
+p {
+	margin: 0;
+}
+
 .App {
 	text-align: center;
 }
@@ -83,4 +88,22 @@ h5 {
 	height: 40px;
 	margin-right: 10px;
 	border-radius: 50%;
+}
+
+.image-card {
+	max-width: 270px;
+}
+
+.image-card:hover {
+	transform: scale(1.05);
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.gallery-image {
+	width: 100%;
+}
+
+button.btn > i,
+a.btn > i {
+	padding-left: 3px;
 }

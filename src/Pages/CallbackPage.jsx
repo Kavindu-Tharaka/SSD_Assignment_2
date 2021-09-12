@@ -25,10 +25,6 @@ function CallbackPage(props) {
 
 		const response = await axios.get(url);
 
-		console.log(response);
-		console.log(response.data.name);
-		console.log(response.data.picture_small.data.url);
-
 		setUserName(response.data.name);
 		setProfilePictureUrl(response.data.picture_small.data.url);
 
@@ -80,14 +76,54 @@ function CallbackPage(props) {
 			</nav>
 
 			<br />
-			{albums.map((image) => (
-				<img
-					src={image.url}
-					key={image.id}
-					alt={image.id}
-					width='250'
-				/>
-			))}
+			<div className='container'>
+				<p className='text-left fw-bold'>You logged in as {userName}</p>
+				<p className='text-left'>
+					Download or Upload Your Facebook Photos to your Google Drive
+					directly with Profile Manager
+				</p>
+				<hr />
+				<h4 className='text-left'>
+					Your Photos{' '}
+					<span className='badge bg-secondarybadge bg-secondary'>
+						{albums.length}
+					</span>
+				</h4>
+				<br />
+
+				<div className='row row-cols-1 row-cols-xl-4 row-cols-lg-4 row-cols-md-3 row-cols-sm-2'>
+					{albums.map((image) => (
+						<div className='col mb-4' key={image.id}>
+							<div className='image-card card p-2 shadow-sm p-3 mb-5 bg-white rounded d-grid gap-2'>
+								<img
+									className='gallery-image'
+									src={image.url}
+									alt={image.id}
+								/>
+
+								<a
+									className='m-0 btn btn-sm btn-primary'
+									href={image.url}
+									download
+								>
+									<i className='fa fa-download' />
+									<span className='m-1'></span>
+									Download
+								</a>
+
+								<a
+									className='btn btn-sm btn-danger'
+									href={image.url}
+								>
+									<i className='fa fa-google' />
+									<span className='m-1'></span>
+									Save to Drive
+								</a>
+							</div>
+						</div>
+					))}
+				</div>
+			</div>
 		</div>
 	);
 }
