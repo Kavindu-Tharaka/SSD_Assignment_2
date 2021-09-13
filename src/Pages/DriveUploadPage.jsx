@@ -10,33 +10,34 @@ function DriveUploadPage() {
   const onFileChange = async (e) => {
     e.preventDefault();
     const image = e.target.files[0]
-    // const base64 = await convertToBase64(image)
-    // console.log(base64)
+    let base64 = await convertToBase64(image)
+    base64 = base64.split(',')[1]
+    console.log(base64)
     // console.log(e.target.files[0].name);
-    const image_base_64 = URL.createObjectURL(e.target.files[0]);
-    const image_file = e.target.files[0];
+    // const image_base_64 = URL.createObjectURL(e.target.files[0]);
+    // const image_file = e.target.files[0];
 
     setImageDetails({
-      image: image_base_64,
-      file: image_file,
+      image: base64,
+      file: 'data',
     });
   };
 
 
-  // const convertToBase64 = file => {
-  //   return new Promise((resolve,reject) => {
-  //     const filereader = new FileReader();
-  //     filereader.readAsDataURL(file);
+  const convertToBase64 = file => {
+    return new Promise((resolve,reject) => {
+      const filereader = new FileReader();
+      filereader.readAsDataURL(file);
 
-  //     filereader.onload = () => {
-  //       resolve(filereader.result)
-  //     }
+      filereader.onload = () => {
+        resolve(filereader.result)
+      }
 
-  //     filereader.onerror = error => {
-  //       reject(error)
-  //     }
-  //   })
-  // }
+      filereader.onerror = error => {
+        reject(error)
+      }
+    })
+  }
 
 
   const onSubmit = async () => {
