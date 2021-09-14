@@ -36,6 +36,9 @@ p {
 	color: #61dafb;
 }
 
+body {
+}
+
 #notfound img {
 	max-width: 600px;
 	margin-top: 50px;
@@ -106,4 +109,32 @@ p {
 button.btn > i,
 a.btn > i {
 	padding-left: 3px;
+}
+
+.banner {
+	width: 60%;
+	margin-left: auto;
+	margin-right: auto;
+	border-radius: 20px;
+}
+
+.img-banner {
+	margin: 30px auto 30px auto;
+}
+
+.btn-get-started {
+	width: 300px;
+	border-radius: 10px;
+	padding: 10px;
+	font-size: larger;
+	margin-top: 20px;
+}
+
+.home-container {
+	background-color: #fff;
+	height: 80vh;
+}
+
+.nav-bar {
+	background-color: #ffffff;
 }

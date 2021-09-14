@@ -1,8 +1,25 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import logo from '../Images/logo.png';
+import Swal from 'sweetalert2';
 
 function CallbackPage(props) {
+	let clientId =
+		'292393918085-j29elmvnrmuomuep37j5umufmegilqnp.apps.googleusercontent.com';
+
+	let redirect_uri = 'http://localhost:3000/facebookapp/callback';
+
+	let scope = 'https://www.googleapis.com/auth/drive';
+
+	const url =
+		'https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=' +
+		redirect_uri +
+		'&prompt=consent&response_type=code&client_id=' +
+		clientId +
+		'&scope=' +
+		scope +
+		'&access_type=offline';
+
 	const [albums, setAlbums] = useState([]);
 	const [profilePictureUrl, setProfilePictureUrl] = useState('');
 	const [userName, setUserName] = useState('');
@@ -10,6 +27,9 @@ function CallbackPage(props) {
 
 	useEffect(() => {
 		handleResponse();
+		if (localStorage.getItem('GAuth') === 'true') {
+			Swal.fire('Hello world!');
+		}
 	}, []);
 
 	const handleResponse = async () => {
@@ -46,6 +66,42 @@ function CallbackPage(props) {
 		});
 	};
 
+	const handleSaveToDriveClick = (url) => {
+		if (localStorage.getItem('GAuth') !== 'true') {
+			handleGoogleAuth();
+		} else {
+			saveToDrive(url);
+		}
+	};
+
+	const handleGoogleAuth = () => {
+		localStorage.setItem('GAuth', 'true');
+		window.location.href = url;
+	};
+
+	const saveToDrive = async (url) => {
+		axios
+			.post('http://localhost:5000/upload', {
+				data: url,
+			})
+			.then((response) => {
+				console.log(response);
+				Swal.fire({
+					title: 'Upload Completed',
+					text: 'Photo Saved to Google Drive',
+					imageUrl: url,
+					imageWidth: 400,
+					imageHeight: 400,
+					imageAlt: 'Uploaded image',
+					confirmButtonColor: '#808080',
+					confirmButtonText: 'Done',
+				});
+			})
+			.error((error) => {
+				console.log(error);
+			});
+	};
+
 	return (
 		<div>
 			<nav className='navbar navbar-light bg-light'>
@@ -59,8 +115,9 @@ function CallbackPage(props) {
 								height='30'
 								className='d-inline-block align-text-top'
 							/>
+							<span className='m-1'></span>
 							<div className='pr-2 d-inline-block align-text-middle'>
-								<h5>Profile Manager</h5>
+								<h5>Photo Saver</h5>
 							</div>
 						</a>
 					</div>
@@ -80,7 +137,7 @@ function CallbackPage(props) {
 				<p className='text-left fw-bold'>You logged in as {userName}</p>
 				<p className='text-left'>
 					Download or Upload Your Facebook Photos to your Google Drive
-					directly with Profile Manager
+					directly with Photo Saver
 				</p>
 				<hr />
 				<h4 className='text-left'>
@@ -111,14 +168,17 @@ function CallbackPage(props) {
 									Download
 								</a>
 
-								<a
+								<button
+									type='button'
 									className='btn btn-sm btn-danger'
-									href={image.url}
+									onClick={() => {
+										handleSaveToDriveClick(image.url);
+									}}
 								>
 									<i className='fa fa-google' />
 									<span className='m-1'></span>
 									Save to Drive
-								</a>
+								</button>
 							</div>
 						</div>
 					))}

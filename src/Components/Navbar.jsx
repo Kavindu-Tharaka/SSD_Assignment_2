@@ -13,7 +13,7 @@ function Navbar(props) {
 						height='30'
 						className='ml-5 d-inline-block align-text-top'
 					/>
-					Profile Manager
+					Photo Saver
 				</a>
 			</div>
 		</nav>
