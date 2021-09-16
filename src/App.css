@@ -1,38 +1,109 @@
+h5 {
+	margin: 0;
+}
+
+p {
+	margin: 0;
+}
+
 .App {
-  text-align: center;
+	text-align: center;
 }
 
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+	height: 40vmin;
+	pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+	.App-logo {
+		animation: App-logo-spin infinite 20s linear;
+	}
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+	background-color: #282c34;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	font-size: calc(10px + 2vmin);
+	color: white;
 }
 
 .App-link {
-  color: #61dafb;
+	color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#notfound img {
+	max-width: 600px;
+	margin-top: 50px;
+}
+
+.notfound h1 {
+	font-family: 'Nunito', sans-serif;
+	font-size: 65px;
+	font-weight: 700;
+	margin-top: 0px;
+	margin-bottom: 10px;
+	color: #151723;
+	text-transform: uppercase;
+}
+
+.notfound h2 {
+	font-family: 'Nunito', sans-serif;
+	font-size: 21px;
+	font-weight: 400;
+	margin: 0;
+	text-transform: uppercase;
+	color: #151723;
+}
+
+.notfound p {
+	font-family: 'Nunito', sans-serif;
+	color: #999fa5;
+	font-weight: 400;
+}
+
+.notfound a {
+	font-family: 'Nunito', sans-serif;
+	display: inline-block;
+	font-weight: 700;
+	border-radius: 40px;
+	text-decoration: none;
+	color: #388dbc;
+}
+
+.btn-fb-login {
+	height: 50px;
+	padding: 0px 40px;
+	border-radius: 100px;
+	border: none;
+	background: #4267b2;
+	color: #fff;
+}
+
+.img-profile-pic {
+	height: 40px;
+	margin-right: 10px;
+	border-radius: 50%;
+}
+
+.image-card {
+	max-width: 270px;
+}
+
+.image-card:hover {
+	transform: scale(1.05);
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.gallery-image {
+	width: 100%;
+}
+
+button.btn > i,
+a.btn > i {
+	padding-left: 3px;
 }

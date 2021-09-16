@@ -1,11 +1,10 @@
-import axios from "axios";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import "./App.css";
 
 import SigninPage from './Pages/SigninPage'
 import CallbackPage from './Pages/CallbackPage'
 import PageNotFoundPage from './Pages/PageNotFoundPage'
-import DriveUploadPage from "./Pages/DriveUploadPage";
+import UploadPage from './Pages/UploadPage'
 
 function App() {
   return (
@@ -15,7 +14,7 @@ function App() {
       <Switch>
         <Route path="/" exact component={SigninPage} />
         <Route path="/facebookapp/callback" exact component={CallbackPage} />
-        <Route path="/driveapp/uploadpage"  component={DriveUploadPage} />
+        <Route path="/uploadfiles" exact component={UploadPage} />
         <Route path="*" exact component={PageNotFoundPage} />
       </Switch>
     </BrowserRouter>

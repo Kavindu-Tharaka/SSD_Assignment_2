@@ -1,60 +1,131 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import logo from '../Images/logo.png';
 
 function CallbackPage(props) {
+	const [albums, setAlbums] = useState([]);
+	const [profilePictureUrl, setProfilePictureUrl] = useState('');
+	const [userName, setUserName] = useState('');
+	const images = [];
 
-    let myArr1;
-    let myArr2;
-    let img = [];
+	useEffect(() => {
+		handleResponse();
+	}, []);
 
-    const [code, setCode] = useState();
-    const [albums, setAlbums] = useState([]);
+	const handleResponse = async () => {
+		const code = props.location.search
+			.split('?code=')[1]
+			.split('&state=')[0];
 
-    useEffect(async () => {
-        myArr1 = props.location.search.split("?code=");
+		const initResponse = await axios.get(
+			`https://graph.facebook.com/v11.0/oauth/access_token?client_id=579207406764914&redirect_uri=http://localhost:3000/facebookapp/callback&client_secret=7713750fdf1076a02df161d4ec8444d9&code=${code}`
+		);
 
-        myArr2 = myArr1[1].split("&state=");
+		let url = `https://graph.facebook.com/me?fields=id,name,picture.width(100).height(100).as(picture_small),albums{photos{images,id}}&access_token=${initResponse.data.access_token}`;
 
-        // console.log(myArr2[0]);
-        setCode(myArr2[0]);
+		const response = await axios.get(url);
 
-        const res1 = await axios.get(`https://graph.facebook.com/v11.0/oauth/access_token?client_id=579207406764914&redirect_uri=http://localhost:3000/facebookapp/callback&client_secret=7713750fdf1076a02df161d4ec8444d9&code=${myArr2[0]}`);
+		setUserName(response.data.name);
+		setProfilePictureUrl(response.data.picture_small.data.url);
 
-        // console.log(res1.data.access_token);
-        setCode(res1.data.access_token);
+		extractImages(response);
+	};
 
-        let url = 'https://graph.facebook.com/me?fields=albums{photos{images,id}}&access_token=' + res1.data.access_token;
+	const extractImages = (response) => {
+		/* reading inner arrays using foreach loop */
+		response.data.albums.data.forEach((element) => {
+			if (element.photos.data.length !== 1) {
+				element.photos.data.forEach((inElement) => {
+					images.push({
+						id: inElement.id,
+						url: inElement.images[0].source,
+					});
+				});
+				setAlbums([...images]);
+			}
+		});
+	};
 
-        const response = await axios.get(url);
+	return (
+		<div>
+			<nav className='navbar navbar-light bg-light'>
+				<div className='container-fluid'>
+					<div>
+						<a className='navbar-brand' href='/'>
+							<img
+								src={logo}
+								alt='FB Manager'
+								width='30'
+								height='30'
+								className='d-inline-block align-text-top'
+							/>
+							<div className='pr-2 d-inline-block align-text-middle'>
+								<h5>Profile Manager</h5>
+							</div>
+						</a>
+					</div>
+					<div>
+						<img
+							src={profilePictureUrl}
+							alt='profile'
+							className='d-inline-block img-profile-pic'
+						/>
+						<h5 className='d-inline-block m-0'>{userName}</h5>
+					</div>
+				</div>
+			</nav>
 
-        // console.log(response);
+			<br />
+			<div className='container'>
+				<p className='text-left fw-bold'>You logged in as {userName}</p>
+				<p className='text-left'>
+					Download or Upload Your Facebook Photos to your Google Drive
+					directly with Profile Manager
+				</p>
+				<hr />
+				<h4 className='text-left'>
+					Your Photos{' '}
+					<span className='badge bg-secondarybadge bg-secondary'>
+						{albums.length}
+					</span>
+				</h4>
+				<br />
 
-        let arr = response.data.albums.data
-        /* reading inner arrays using foreach loop */
-        arr.forEach(element => {
-            if (element.photos.data.length !== 1) {
-                let innerArray = element.photos.data
-                innerArray.forEach(inElement => {
-                    let temp = {
-                        id: inElement.id,
-                        image: inElement.images[0].source
-                    };
-                    img.push(temp); /* push images to album array */
-                });
-            }
-            setAlbums(img)
-        });
+				<div className='row row-cols-1 row-cols-xl-4 row-cols-lg-4 row-cols-md-3 row-cols-sm-2'>
+					{albums.map((image) => (
+						<div className='col mb-4' key={image.id}>
+							<div className='image-card card p-2 shadow-sm p-3 mb-5 bg-white rounded d-grid gap-2'>
+								<img
+									className='gallery-image'
+									src={image.url}
+									alt={image.id}
+								/>
 
-        console.log(img);
+								<a
+									className='m-0 btn btn-sm btn-primary'
+									href={image.url}
+									download
+								>
+									<i className='fa fa-download' />
+									<span className='m-1'></span>
+									Download
+								</a>
 
-    }, [])
-
-
-    return (
-        <div>            
-            Images Will Be Here...
-        </div>
-    )
+								<a
+									className='btn btn-sm btn-danger'
+									href={image.url}
+								>
+									<i className='fa fa-google' />
+									<span className='m-1'></span>
+									Save to Drive
+								</a>
+							</div>
+						</div>
+					))}
+				</div>
+			</div>
+		</div>
+	);
 }
 
-export default CallbackPage
+export default CallbackPage;
