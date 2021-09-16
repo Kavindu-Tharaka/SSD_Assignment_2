@@ -4,57 +4,22 @@ import path from "path";
 import axios from 'axios'
 
 function UploadPage() {
-  const [imageDetails, setImageDetails] = useState();
-
-
-  const onFileChange = async (e) => {
-    e.preventDefault();
-    const image = e.target.files[0]
-    let base64 = await convertToBase64(image)
-    base64 = base64.split(',')[1]
-    console.log(base64)
-    // console.log(e.target.files[0].name);
-    // const image_base_64 = URL.createObjectURL(e.target.files[0]);
-    // const image_file = e.target.files[0];
-
-    setImageDetails({
-      image: base64,
-      file: 'data',
-    });
-  };
-
-
-  const convertToBase64 = file => {
-    return new Promise((resolve,reject) => {
-      const filereader = new FileReader();
-      filereader.readAsDataURL(file);
-
-      filereader.onload = () => {
-        resolve(filereader.result)
-      }
-
-      filereader.onerror = error => {
-        reject(error)
-      }
-    })
-  }
-
-
-  const onSubmit = async () => {
+  /*
+  sending the selected image to backend for uploading
+  */
+  const onSubmit = async (url) => {
     try {
-      console.log('shdbaj')
-      const res =  await axios.post("/upload",{
-        data:imageDetails
+      const res =  await axios.post("http://localhost:5000/upload",{
+        data:url
       })
     } catch (error) {
-      
+      console.log(error)
     }
-    // console.log(imageDetails);
-    // const formdata = new FormData();
-    // formdata.append("data", imageDetails.image);
-    // formdata.append("file_details", imageDetails.file);
-    // uploadtoDrive();
   };
+
+
+
+  
 
   return (
     <>
