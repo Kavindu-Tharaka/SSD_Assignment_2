@@ -3,7 +3,7 @@ import path from "path";
 // import { google } from "googleapis";
 import axios from 'axios'
 
-function UploadPage() {
+function DriveUploadPage() {
   const [imageDetails, setImageDetails] = useState();
 
 
@@ -73,4 +73,4 @@ function UploadPage() {
   );
 }
 
-export default UploadPage;
+export default DriveUploadPage;
