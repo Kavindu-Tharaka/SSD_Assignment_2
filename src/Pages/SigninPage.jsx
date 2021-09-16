@@ -3,6 +3,9 @@ import logo from '../Images/logo.png';
 import banner from '../Images/banner.gif';
 
 function SigninPage() {
+	/**
+	 * Redirect user to login with Facebook
+	 */
 	async function handleFBLogin() {
 		localStorage.clear();
 		window.location.href =

@@ -4,12 +4,13 @@ import logo from '../Images/logo.png';
 import Swal from 'sweetalert2';
 
 function CallbackPage(props) {
-	let clientId =
+	// Constant related Google Auth
+	const clientId =
 		'292393918085-j29elmvnrmuomuep37j5umufmegilqnp.apps.googleusercontent.com';
 
-	let redirect_uri = 'http://localhost:3000/facebookapp/callback';
+	const redirect_uri = 'http://localhost:3000/facebookapp/callback';
 
-	let scope = 'https://www.googleapis.com/auth/drive';
+	const scope = 'https://www.googleapis.com/auth/drive';
 
 	const url =
 		'https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=' +
@@ -20,6 +21,7 @@ function CallbackPage(props) {
 		scope +
 		'&access_type=offline';
 
+	// Constant related Facebook Auth and Resource
 	const [albums, setAlbums] = useState([]);
 	const [profilePictureUrl, setProfilePictureUrl] = useState('');
 	const [userName, setUserName] = useState('');
@@ -27,32 +29,39 @@ function CallbackPage(props) {
 
 	useEffect(() => {
 		handleResponse();
-		if (localStorage.getItem('GAuth') === 'true') {
-			Swal.fire('Hello world!');
-		}
 	}, []);
 
+	/**
+	 * Handles call back response from Facebook authorization
+	 */
 	const handleResponse = async () => {
-		const code = props.location.search
+		// Separate the authorization code from URL
+		const authCode = props.location.search
 			.split('?code=')[1]
 			.split('&state=')[0];
 
+		// Request the access token providing the Authorization code
 		const initResponse = await axios.get(
-			`https://graph.facebook.com/v11.0/oauth/access_token?client_id=579207406764914&redirect_uri=http://localhost:3000/facebookapp/callback&client_secret=7713750fdf1076a02df161d4ec8444d9&code=${code}`
+			`https://graph.facebook.com/v11.0/oauth/access_token?client_id=579207406764914&redirect_uri=http://localhost:3000/facebookapp/callback&client_secret=7713750fdf1076a02df161d4ec8444d9&code=${authCode}`
 		);
 
-		let url = `https://graph.facebook.com/me?fields=id,name,picture.width(100).height(100).as(picture_small),albums{photos{images,id}}&access_token=${initResponse.data.access_token}`;
+		// Request the user images by using Access token
+		const response = await axios.get(
+			`https://graph.facebook.com/me?fields=id,name,picture.width(100).height(100).as(picture_small),albums{photos{images,id}}&access_token=${initResponse.data.access_token}`
+		);
 
-		const response = await axios.get(url);
-
+		// Extract data from the response
 		setUserName(response.data.name);
 		setProfilePictureUrl(response.data.picture_small.data.url);
-
 		extractImages(response);
 	};
 
+	/**
+	 * Extracts images and urls from the given Facebook response
+	 * @param {Facebook response that contains user photos} response
+	 */
 	const extractImages = (response) => {
-		/* reading inner arrays using foreach loop */
+		// Reading inner arrays using foreach loop
 		response.data.albums.data.forEach((element) => {
 			if (element.photos.data.length !== 1) {
 				element.photos.data.forEach((inElement) => {
@@ -66,6 +75,10 @@ function CallbackPage(props) {
 		});
 	};
 
+	/**
+	 * Checks Google login status and handle on button click
+	 * @param {Image URL to be uploaded} url
+	 */
 	const handleSaveToDriveClick = (url) => {
 		if (localStorage.getItem('GAuth') !== 'true') {
 			handleGoogleAuth();
@@ -74,11 +87,18 @@ function CallbackPage(props) {
 		}
 	};
 
+	/**
+	 * Handle Google login and redirect
+	 */
 	const handleGoogleAuth = () => {
 		localStorage.setItem('GAuth', 'true');
 		window.location.href = url;
 	};
 
+	/**
+	 * Uploads given image to Google drive
+	 * @param {Image URL to be uploaded} url
+	 */
 	const saveToDrive = async (url) => {
 		axios
 			.post('http://localhost:5000/upload', {
