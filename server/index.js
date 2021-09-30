@@ -1,54 +1,80 @@
 const express = require('express');
-const { google } = require('googleapis');
-const { OAuth2Client } = require('google-auth-library');
 const app = express();
-app.use(express.json());
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const { google } = require('googleapis');
+const fs = require("fs");
+const formidable = require('formidable');
+const credentials = require('./credentials.json');
 
-//Initializing client id,secret and redirect URI constants
-const CLIENT_ID =
-	'132620122654-ij2jqq591tmp3726366j4veh92806vkv.apps.googleusercontent.com';
-const CLIENT_SECRET = '_WHhVdjkglEZEfOcAGx6OphH';
-const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
-const REFRESH_TOKEN =
-	'1//04L2z0DhgyeYzCgYIARAAGAQSNwF-L9IrfQMCgAOhJzu3h3ftSvGcLmACmAzLjKlTpuXNy-Z8juJ1o6l8iKvsFGV5EA-wtOMNtYU';
+const client_id = credentials.web.client_id;
+const client_secret = credentials.web.client_secret;
+const redirect_uris = credentials.web.redirect_uris;
+const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 
-// creating OAuthtClient object
-const oAuthtoClient = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+const SCOPE = ['https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/drive.file']
 
-//creating drive object
-const drive = google.drive({
-	version: 'v3',
-	auth: oAuthtoClient,
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+app.get('/', (req, res) => res.send(' API Running'));
+
+app.get('/getAuthURL', (req, res) => {
+    const authUrl = oAuth2Client.generateAuthUrl({
+        access_type: 'offline',
+        scope: SCOPE,
+    });
+    console.log(authUrl);
+    return res.send(authUrl);
 });
 
-//setting OAuth2Client credentials
-oAuthtoClient.setCredentials({
-	refresh_token: REFRESH_TOKEN,
+app.post('/getToken', (req, res) => {
+    if (req.body.code == null) return res.status(400).send('Invalid Request');
+    oAuth2Client.getToken(req.body.code, (err, token) => {
+        if (err) {
+            console.error('Error retrieving access token', err);
+            return res.status(400).send(err);
+        }
+        res.send(token);
+    });
 });
 
-/**
- * End point to upload images to the google drive request body will contain the url of the image
- * if success 200 status code will be sent as the response to the client if there is an error status
- * code of 400 will be sent to the client side
- */
-app.post('/upload', async (req, res) => {
-	try {
-		const res = await drive.files.create({
-			requestBody: {
-				name: req.body.data.file.name,
-				mimeType: 'image/jpg',
-			},
-			media: {
-				mimeType: 'image/jpg',
-				body: req.body.data.file.url,
-			},
-		});
-
-		console.log(res);
-	} catch (error) {
-		console.log(error);
-	}
+app.post('/fileUpload', (req, res) => {
+    var form = new formidable.IncomingForm();
+    form.parse(req, (err, fields, files) => {
+        if (err) return res.status(400).send(err);
+        const token = JSON.parse(fields.token);
+        console.log(token)
+        if (token == null) return res.status(400).send('Token not found');
+        oAuth2Client.setCredentials(token);
+        console.log(files.file);
+        const drive = google.drive({ version: "v3", auth: oAuth2Client });
+        const fileMetadata = {
+            name: files.file.name,
+        };
+        const media = {
+            mimeType: files.file.type,
+            body: fs.createReadStream(files.file.path),
+        };
+        drive.files.create(
+            {
+                resource: fileMetadata,
+                media: media,
+                fields: "id",
+            },
+            (err, file) => {
+                oAuth2Client.setCredentials(null);
+                if (err) {
+                    console.error(err);
+                    res.status(400).send(err)
+                } else {
+                    res.send('Successful')
+                }
+            }
+        );
+    });
 });
 
-const PORT = 5000;
-app.listen(PORT, () => console.log(`Listening to PORT ${PORT}`));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server Started ${PORT}`));
