@@ -85,6 +85,17 @@ body {
 	border: none;
 	background: #4267b2;
 	color: #fff;
+	width: 300px;
+}
+
+.btn-google-login {
+	height: 50px;
+	padding: 0px 40px;
+	border-radius: 100px;
+	border: none;
+	background: #b90600;
+	color: #fff;
+	width: 300px;
 }
 
 .img-profile-pic {

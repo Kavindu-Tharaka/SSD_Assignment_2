@@ -1,12 +1,12 @@
 import React from 'react';
-import pageNotFoundImage from '../Images/notfound.gif'
+import pageNotFoundImage from '../Images/notfound.gif';
 
 function PageNotFoundPage() {
 	return (
 		<div id='notfound'>
-            <img src={pageNotFoundImage} alt="not found" />
-			<div class='notfound'>
-				<div class='notfound-404'></div>
+			<img src={pageNotFoundImage} alt='not found' />
+			<div className='notfound'>
+				<div className='notfound-404'></div>
 				<h2>Oops! Page Not Be Found</h2>
 				<p>
 					Sorry but the page you are looking for does not exist, have

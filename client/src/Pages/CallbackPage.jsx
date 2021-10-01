@@ -4,23 +4,6 @@ import logo from '../Images/logo.png';
 import Swal from 'sweetalert2';
 
 function CallbackPage(props) {
-	// Constant related Google Auth
-	const clientId =
-		'292393918085-j29elmvnrmuomuep37j5umufmegilqnp.apps.googleusercontent.com';
-
-	const redirect_uri = 'http://localhost:3000/facebookapp/callback';
-
-	const scope = 'https://www.googleapis.com/auth/drive';
-
-	const url =
-		'https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=' +
-		redirect_uri +
-		'&prompt=consent&response_type=code&client_id=' +
-		clientId +
-		'&scope=' +
-		scope +
-		'&access_type=offline';
-
 	// Constant related Facebook Auth and Resource
 	const [albums, setAlbums] = useState([]);
 	const [profilePictureUrl, setProfilePictureUrl] = useState('');
@@ -73,53 +56,6 @@ function CallbackPage(props) {
 				setAlbums([...images]);
 			}
 		});
-	};
-
-	/**
-	 * Checks Google login status and handle on button click
-	 * @param {Image URL to be uploaded} url
-	 */
-	const handleSaveToDriveClick = (url) => {
-		if (localStorage.getItem('GAuth') !== 'true') {
-			handleGoogleAuth();
-		} else {
-			saveToDrive(url);
-		}
-	};
-
-	/**
-	 * Handle Google login and redirect
-	 */
-	const handleGoogleAuth = () => {
-		localStorage.setItem('GAuth', 'true');
-		window.location.href = url;
-	};
-
-	/**
-	 * Uploads given image to Google drive
-	 * @param {Image URL to be uploaded} url
-	 */
-	const saveToDrive = async (url) => {
-		axios
-			.post('http://localhost:5000/upload', {
-				data: url,
-			})
-			.then((response) => {
-				console.log(response);
-				Swal.fire({
-					title: 'Upload Completed',
-					text: 'Photo Saved to Google Drive',
-					imageUrl: url,
-					imageWidth: 400,
-					imageHeight: 400,
-					imageAlt: 'Uploaded image',
-					confirmButtonColor: '#808080',
-					confirmButtonText: 'Done',
-				});
-			})
-			.error((error) => {
-				console.log(error);
-			});
 	};
 
 	return (
@@ -187,18 +123,6 @@ function CallbackPage(props) {
 									<span className='m-1'></span>
 									Download
 								</a>
-
-								<button
-									type='button'
-									className='btn btn-sm btn-danger'
-									onClick={() => {
-										handleSaveToDriveClick(image.url);
-									}}
-								>
-									<i className='fa fa-google' />
-									<span className='m-1'></span>
-									Save to Drive
-								</button>
 							</div>
 						</div>
 					))}

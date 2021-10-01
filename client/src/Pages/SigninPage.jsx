@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from '../Images/logo.png';
 import banner from '../Images/banner.gif';
+import axios from 'axios';
 
 function SigninPage() {
 	/**
@@ -8,8 +9,25 @@ function SigninPage() {
 	 */
 	async function handleFBLogin() {
 		localStorage.clear();
+
 		window.location.href =
 			'http://www.facebook.com/v11.0/dialog/oauth?response_type=code&client_id=579207406764914&redirect_uri=http://localhost:3000/facebookapp/callback&scope=public_profile%20user_posts%20user_friends%20user_photos%20user_photos&state=123';
+	}
+
+	/**
+	 * Redirect user to login with Google
+	 */
+	async function handleGoogleLogin() {
+		localStorage.clear();
+
+		// Get Auth URL from the server and redirect to login
+		try {
+			const res = await axios.get('http://localhost:5000/getAuthURL');
+			console.log(res);
+			window.location.href = res.data;
+		} catch (error) {
+			console.log(error);
+		}
 	}
 
 	return (
@@ -35,8 +53,6 @@ function SigninPage() {
 			</nav>{' '}
 			<br />
 			<div className='container home-container'>
-				<br /> <br />
-				<br />
 				<h1 className='mt-5 text-primary'>Facebook Photo Saver</h1>{' '}
 				<hr />
 				<p className='mb-5 text-secondary'>
@@ -63,7 +79,16 @@ function SigninPage() {
 					type='button'
 				>
 					<i className='fa fa-facebook m-3' />
-					Login With Facebook
+					Download Photos
+				</button>
+				<span className='m-3'></span>
+				<button
+					onClick={handleGoogleLogin}
+					className='btn-google-login'
+					type='button'
+				>
+					<i className='fa fa-google m-3' />
+					Upload Photos
 				</button>
 			</div>
 		</div>

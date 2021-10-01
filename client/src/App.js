@@ -4,6 +4,7 @@ import './App.css';
 import SigninPage from './Pages/SigninPage';
 import CallbackPage from './Pages/CallbackPage';
 import PageNotFoundPage from './Pages/PageNotFoundPage';
+import FileUploadPage from './Pages/FileUploadPage';
 
 function App() {
 	return (
@@ -15,6 +16,11 @@ function App() {
 						path='/facebookapp/callback'
 						exact
 						component={CallbackPage}
+					/>
+					<Route
+						path='/fileUpload'
+						exact
+						component={FileUploadPage}
 					/>
 					<Route path='*' exact component={PageNotFoundPage} />
 				</Switch>
