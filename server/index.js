@@ -17,6 +17,7 @@ const oAuth2Client = new google.auth.OAuth2(
 	redirect_uris[0]
 );
 
+// Define the access scope
 const SCOPE = [
 	'https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/drive.file',
 ];
@@ -65,6 +66,7 @@ app.post('/fileUpload', (req, res) => {
 		if (err) return res.status(400).send(err);
 		const token = JSON.parse(fields.token);
 
+		// Check and set credentials
 		if (token == null) return res.status(400).send('Token not found');
 		oAuth2Client.setCredentials(token);
 

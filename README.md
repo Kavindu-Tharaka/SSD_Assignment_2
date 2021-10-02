@@ -1,15 +1,15 @@
 # Secure Software Development (SE4030)
 ### Assignment 2 | OAuth 2.0 Framework
-This application facilitates users to retrive their all the Facebook photos and upload them to their Google drive.
+This application facilitates users to retrieve their all the Facebook photos and upload them to their Google drive.
 
 ### Group Members
 
 |**Registration Number**	|**Name with Initials**	|**Contribution**	|
 |-------------------|-------------------|---------------|
-|IT18001112	|Tharaka W.C.M.K.	| Facebook Use case	|
-|IT18009132	|Dilanka R.M.T.	| Facebook Use case	|
+|IT18001112	|Tharaka W.C.M.K.	| Facebook Use case & Google Drive Use case	|
+|IT18009132	|Dilanka R.M.T.	| Facebook Use case	& Google Drive Use case |
 |IT18007848	|Rathnayake R.H.C.S	| Google Drive Use case	|
-|IT18006544	|H.D.D.S Perera	|	Google Drive Use Case |
+|IT18006544	|H.D.D.S Perera	| Google Drive Use Case |
 
 ### Configuration
 * Clone the repository using `git clone https://github.com/Kavindu-Tharaka/SSD_Assignment_2.git` command.
@@ -19,8 +19,8 @@ This application facilitates users to retrive their all the Facebook photos and 
 ### Deployment and Run
 **1. Run the file upload server - Navigate to `server` directory and run following commands**
 * `npm install` - Install dependancies
-* `nodemon` - Run the server
+* `npm start` - Run the server
 
-**2. Run the client application - Navigate to the root directory and enter the following commads**
+**2. Run the client application - Navigate to the `client` directory and enter the following commands**
 * `npm install` - Install dependancies
 * `npm start` - Run the client application

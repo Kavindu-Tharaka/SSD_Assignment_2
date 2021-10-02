@@ -11,35 +11,41 @@ function FileUploadPage(props) {
 	const [selectedFile, setSelectedFile] = useState();
 	const [isFilePicked, setIsFilePicked] = useState(false);
 
-	const onFileChange = (event) => {
-		setSelectedFile(event.target.files[0]);
-		setImageSrc(URL.createObjectURL(event.target.files[0]));
-		console.log(URL.createObjectURL(event.target.files[0]));
-		setIsFilePicked(true);
-	};
-
 	useEffect(() => {
 		handleResponse();
 	}, []);
 
 	/**
+	 * Handle file input
+	 */
+	const onFileChange = (event) => {
+		setSelectedFile(event.target.files[0]);
+		setImageSrc(URL.createObjectURL(event.target.files[0]));
+		setIsFilePicked(true);
+	};
+
+	/**
 	 * Send file to the server to handle Google drive save
 	 */
 	const onFileUpload = () => {
+		// Build the form data
 		const formData = new FormData();
 
 		formData.append('token', `${JSON.stringify(accessToken)}`);
 		formData.append('file', selectedFile);
 
+		// Request config
 		const requestOptions = {
 			method: 'POST',
 			body: formData,
 			redirect: 'follow',
 		};
 
+		// Send request to upload file
 		fetch('http://localhost:5000/fileUpload', requestOptions)
 			.then((response) => response.text())
 			.then((result) => {
+				// Alert the success message
 				Swal.fire({
 					title: 'Upload Completed',
 					text: 'Photo Saved to Google Drive',
@@ -49,7 +55,7 @@ function FileUploadPage(props) {
 					confirmButtonColor: '#808080',
 					confirmButtonText: 'Done',
 				}).finally(() => {
-          setIsFilePicked(false);
+					setIsFilePicked(false);
 				});
 
 				console.log(result);
