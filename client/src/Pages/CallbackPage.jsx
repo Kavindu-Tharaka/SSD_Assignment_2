@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import logo from '../Images/logo.png';
-import Swal from 'sweetalert2';
 
 function CallbackPage(props) {
 	// Constant related Facebook Auth and Resource

@@ -98,10 +98,24 @@ body {
 	width: 300px;
 }
 
+.btn-google-save {
+	height: 50px;
+	padding: 0px 40px;
+	border-radius: 100px;
+	border: none;
+	background: #0066b9;
+	color: #fff;
+	width: 300px;
+}
+
 .img-profile-pic {
 	height: 40px;
 	margin-right: 10px;
 	border-radius: 50%;
+}
+
+.img-selected-pic {
+	height: 300px;
 }
 
 .image-card {
@@ -148,4 +162,21 @@ a.btn > i {
 
 .nav-bar {
 	background-color: #ffffff;
+}
+
+.img-placeholder {
+	background: #f5f5f5;
+	height: 400px;
+	padding: 50px;
+}
+
+.img-selected-placeholder {
+	margin: 50px 0px 20px 0px;
+	height: 150px;
+	opacity: 0.5;
+}
+
+h6 {
+	color: #646464;
+	font-size: large;
 }
